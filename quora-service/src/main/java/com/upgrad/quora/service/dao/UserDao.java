@@ -25,7 +25,7 @@ public class UserDao {
         entityManager.persist(userEntity);
         return userEntity;
     }
-    
+
     public UserEntity getUserByPassword(final String password){
         try {
             return entityManager.createNamedQuery("userByPassword", UserEntity.class).setParameter("password", password).getSingleResult();
