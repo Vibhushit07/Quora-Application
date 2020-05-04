@@ -34,8 +34,8 @@ public class UserController {
      * A controller method for endpoint /user/signup.
      *
      * @param signupUserRequest - This argument contains all the attributes required to store user details in the database.
-     * @return - ResponseEntity<SignupUserResponse> type object along with Http status CREATED.
-     * @throws SignUpRestrictedException
+     * @return - uuid' of the registered user and message 'USER SUCCESSFULLY REGISTERED'
+     *           in the JSON response with the corresponding HTTP status     * @throws SignUpRestrictedException
      */
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -97,8 +97,9 @@ public class UserController {
      * A controller method for endpoint /user/signout.
      *
      * @param authorization - A field in the request header which contains the user credentials as Basic authentication.
-     * @return - ResponseEntity<SignOutResponse> type object along with Http status OK.
-     * @throws SignOutRestrictedException
+     * @return - uuid of the signed out user from 'users' table and message 'SIGNED OUT SUCCESSFULLY'
+     *           in the JSON response with the corresponding HTTP status 
+     * * @throws SignOutRestrictedException
      */
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/signout", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
