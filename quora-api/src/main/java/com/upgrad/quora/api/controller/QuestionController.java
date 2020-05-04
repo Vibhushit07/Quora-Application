@@ -5,6 +5,7 @@ import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.QuestionBusinessService;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,5 +56,21 @@ public class QuestionController {
 
         return new ResponseEntity<>(questionDetailsResponseList, HttpStatus.OK);
 
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/question/edit/{questionId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionEditResponse> editQuestionContent(final QuestionEditRequest questionEditRequest, @PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws  AuthorizationFailedException, InvalidQuestionException {
+
+        final QuestionEntity questionEntity = new QuestionEntity();
+
+        questionEntity.setContent(questionEditRequest.getContent());
+
+        final QuestionEntity editQuestionEntity = questionBusinessService.editQuestionContent(questionEntity, questionId, authorization);
+
+        QuestionEditResponse questionEditResponse = new QuestionEditResponse();
+        questionEditResponse.id(editQuestionEntity.getUuid());
+        questionEditResponse.status("QUESTION EDITED SUCCESSFULLY");
+
+        return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
     }
 }
