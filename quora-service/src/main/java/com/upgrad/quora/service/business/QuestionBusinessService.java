@@ -66,6 +66,16 @@ public class QuestionBusinessService {
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
     }
 
+    /**
+     * The method implements the business logic for /question/edit/{questionId} endpoint.
+     * @param questionEntity
+     * @param questionUuid
+     * @param authorizationToken
+     * @return uuid of the edited question
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+
     public QuestionEntity editQuestionContent(final QuestionEntity questionEntity, final String questionUuid, final String authorizationToken) throws AuthorizationFailedException, InvalidQuestionException {
 
         UserAuthenticationTokenEntity userAuthenticationTokenEntity = questionDao.getUserAuthToken(authorizationToken);
@@ -93,6 +103,15 @@ public class QuestionBusinessService {
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
     }
 
+    /**
+     *  The method implements the business logic for /question/delete/{questionId} endpoint.
+     * @param questionid
+     * @param authorizationToken
+     * @return uuid of the deleted question
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+
     public QuestionEntity deleteQuestion(final String questionid, final String authorizationToken) throws AuthorizationFailedException, InvalidQuestionException {
         UserAuthenticationTokenEntity userAuthTokenEntity = questionDao.getUserAuthToken(authorizationToken);
         if(userAuthTokenEntity != null){
@@ -118,6 +137,15 @@ public class QuestionBusinessService {
 
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
     }
+
+    /**
+     *  The method implements the business logic for /question/all/{userId} endpoint.
+     * @param userId
+     * @param authorization
+     * @return uuid and content of all the questions posed by the corresponding user
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
 
     public List<QuestionEntity> getAllQuestionsByUserId(final String userId, final String authorization) throws AuthorizationFailedException, UserNotFoundException {
 

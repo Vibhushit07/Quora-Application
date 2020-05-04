@@ -65,7 +65,8 @@ public class UserController {
      * A controller method for endpoint /user/signin.
      *
      * @param authorization - A field in the request header which contains the user credentials as Basic authentication.
-     * @return - ResponseEntity<SigninResponse> type object along with Http status OK.
+     * @return - uuid of the authenticated user from users table and message 'SIGNED IN SUCCESSFULLY' in the JSON response
+     *          with the corresponding HTTP status and access token in the access_token field of the Response Header.
      * @throws AuthenticationFailedException
      */
 
