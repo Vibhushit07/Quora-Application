@@ -7,6 +7,7 @@ import com.upgrad.quora.service.entity.UserAuthenticationTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,14 @@ public class QuestionBusinessService {
 
     @Autowired
     private UserDao userDao;
+
+    /**
+     * The method implements the business logic for /question/create endpoint.
+     * @param questionEntity
+     * @param authorizationToken
+     * @return uuid of created question
+     * @throws AuthorizationFailedException
+     */
 
     public QuestionEntity createQuestion(final QuestionEntity questionEntity, final String authorizationToken) throws AuthorizationFailedException {
 
@@ -99,6 +108,26 @@ public class QuestionBusinessService {
             {
                 throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
             }
+        }
+
+        throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+    }
+
+    public List<QuestionEntity> getAllQuestionsByUserId(final String userId, final String authorization) throws AuthorizationFailedException, UserNotFoundException {
+
+        UserAuthenticationTokenEntity userAuthenticationTokenEntity = questionDao.getUserAuthToken(authorization);
+
+        if(userAuthenticationTokenEntity != null){
+
+            if(userAuthenticationTokenEntity.getLogoutAt() != null)
+                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions posted by a specific user");
+
+            UserEntity userEntity = userDao.getUserByUuid(userId);
+
+            if(userEntity == null)
+                throw new UserNotFoundException("USR-001", "User with entered uuid whose question details are to be seen does not exist");
+
+            return questionDao.getAllQuestionsByUserId(userEntity.getId());
         }
 
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
