@@ -20,6 +20,15 @@ public class CommonController {
     @Autowired
     private CommonBusinessService commonBusinessService;
 
+    /**
+     * A controller method for endpoint /userprofile/{userId}
+     * @param userId
+     * @param authorization
+     * @return
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
+
     @RequestMapping(method = RequestMethod.GET, path = "/userprofile/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") final String userId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException
     {
