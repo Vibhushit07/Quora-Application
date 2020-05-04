@@ -40,4 +40,12 @@ public class AnswerDao {
         entityManager.merge(answerEntity);
         return answerEntity;
     }
+
+    public AnswerEntity getAnswerById(final String UUID) {
+        try {
+            return entityManager.createNamedQuery("answerByUUID", AnswerEntity.class).setParameter("UUID", UUID).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
 }
