@@ -49,6 +49,14 @@ public class UserBusinessService {
         return userDao.createUser(userEntity);
     }
 
+    /**
+     * The method implements the business logic for /user/signin endpoint.
+     * @param username
+     * @param password
+     * @return uuid of authenticated user and access token which will be used by user
+     * @throws AuthenticationFailedException
+     */
+
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthenticationTokenEntity authenticate(final String username, final String password) throws AuthenticationFailedException {
 
