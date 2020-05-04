@@ -18,6 +18,15 @@ public class UserAdminBusinessService {
     @Autowired
     private AdminDao adminDao;
 
+    /**
+     * The method implements the business logic for /admin/user/{userId} endpoint.
+     * @param userid
+     * @param authorizationToken
+     * @return Uuid of the deleted user
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
+
     public UserEntity DeleteUser(final String userid, final String authorizationToken) throws AuthorizationFailedException, UserNotFoundException {
         UserAuthenticationTokenEntity userAuthenticationTokenEntity = userDao.getUserAuthToken(authorizationToken);
         if (userAuthenticationTokenEntity != null) {
