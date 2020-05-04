@@ -86,7 +86,7 @@ public class QuestionController {
         return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
     }
 
-    @GetMapping("question/all/{userId}")
+    @GetMapping("/question/all/{userId}")
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionsByUserId(@PathVariable final String userId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException {
 
         List<QuestionEntity> questionEntityList = questionBusinessService.getAllQuestionsByUserId(userId, authorization);
