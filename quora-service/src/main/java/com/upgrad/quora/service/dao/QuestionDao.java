@@ -72,7 +72,6 @@ public class QuestionDao {
         return questionEntity;
     }
 
-<<<<<<< HEAD
     public List<QuestionEntity> getAllQuestionsByUserId(final Integer userId) {
 
         try {
@@ -81,6 +80,4 @@ public class QuestionDao {
             return null;
         }
     }
-=======
->>>>>>> origin/master
 }

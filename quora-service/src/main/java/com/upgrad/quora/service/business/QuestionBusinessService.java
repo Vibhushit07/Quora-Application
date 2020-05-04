@@ -7,10 +7,7 @@ import com.upgrad.quora.service.entity.UserAuthenticationTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
-<<<<<<< HEAD
 import com.upgrad.quora.service.exception.UserNotFoundException;
-=======
->>>>>>> origin/master
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,7 +104,7 @@ public class QuestionBusinessService {
 
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
     }
-<<<<<<< HEAD
+
 
     public List<QuestionEntity> getAllQuestionsByUserId(final String userId, final String authorization) throws AuthorizationFailedException, UserNotFoundException {
 
@@ -128,6 +125,5 @@ public class QuestionBusinessService {
 
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
     }
-=======
->>>>>>> origin/master
+
 }
