@@ -3,6 +3,7 @@ package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthenticationTokenEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +54,21 @@ public class QuestionDao {
     @Transactional
     public QuestionEntity editQuestionContent(QuestionEntity questionEntity){
         entityManager.merge(questionEntity);
+        return questionEntity;
+    }
+
+    public UserEntity getUserByUuid(final String UUID) {
+        try {
+            return entityManager.createNamedQuery("userByUuid", UserEntity.class).setParameter("uuid", UUID).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    @Transactional
+    public QuestionEntity DeleteQuestion(QuestionEntity questionEntity){
+        entityManager.remove(questionEntity);
+
         return questionEntity;
     }
 
