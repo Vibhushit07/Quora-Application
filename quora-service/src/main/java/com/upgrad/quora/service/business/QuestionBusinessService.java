@@ -46,6 +46,12 @@ public class QuestionBusinessService {
         return questionDao.createQuestion(questionEntity);
     }
 
+    /**
+     * The method implements the business logic for /question/all endpoint.
+     * @param authorizationToken
+     * @return uuid and content of all the questions
+     * @throws AuthorizationFailedException
+     */
     public List<QuestionEntity> getAllQuestions(final String authorizationToken) throws AuthorizationFailedException {
 
         UserAuthenticationTokenEntity userAuthenticationTokenEntity = userDao.getUserAuthToken(authorizationToken);
@@ -132,4 +138,5 @@ public class QuestionBusinessService {
 
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
     }
+
 }
