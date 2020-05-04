@@ -12,6 +12,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+/**
+ * QuestionDao class provides the database access
+ * for all the endpoints in question controller.
+ */
+
 
 @Repository
 public class QuestionDao {

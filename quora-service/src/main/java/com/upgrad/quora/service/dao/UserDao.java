@@ -11,7 +11,8 @@ import javax.persistence.PersistenceContext;
 import java.time.ZonedDateTime;
 
 /**
- * UserDao class provides the database access for all the endpoints in user controller.
+ * UserDao class provides the database access
+ * for all the endpoints in user controller.
  */
 
 @Repository

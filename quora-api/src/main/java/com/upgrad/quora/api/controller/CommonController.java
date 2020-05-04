@@ -24,7 +24,8 @@ public class CommonController {
      * A controller method for endpoint /userprofile/{userId}
      * @param userId
      * @param authorization
-     * @return
+     * @return all the details of the user from the database in the JSON response
+     *         with the corresponding HTTP status
      * @throws AuthorizationFailedException
      * @throws UserNotFoundException
      */

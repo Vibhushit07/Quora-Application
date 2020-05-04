@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *  AnswerDao class provides the database access
- *  for all the endpoints in user controller.
+ *  for all the endpoints in Answer controller.
  */
 
 @Repository

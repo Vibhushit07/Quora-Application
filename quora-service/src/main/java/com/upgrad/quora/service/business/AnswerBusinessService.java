@@ -29,6 +29,15 @@ public class AnswerBusinessService {
     @Autowired
     private UserDao userDao;
 
+    /**
+     * The method implements the business logic for /question/{questionId}/answer/create endpoint. 
+     * @param answerEntity
+     * @param authorization
+     * @return uuid of the created answer
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+
     public AnswerEntity createAnswer(final AnswerEntity answerEntity, final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
 
         UserAuthenticationTokenEntity userAuthenticationTokenEntity = userDao.getUserAuthToken(authorization);
@@ -51,6 +60,16 @@ public class AnswerBusinessService {
 
         return questionEntity;
     }
+
+    /**
+     * The method implements the business logic for /answer/edit/{answerId} endpoint. 
+     * @param answerContent
+     * @param answerId
+     * @param accessToken
+     * @return uuid of the edited answer
+     * @throws AuthorizationFailedException
+     * @throws AnswerNotFoundException
+     */
 
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity editAnswer(final String answerContent, final String answerId, final String accessToken) throws AuthorizationFailedException, AnswerNotFoundException {
@@ -78,6 +97,14 @@ public class AnswerBusinessService {
         }
     }
 
+    /**
+     * The method implements the business logic for /answer/delete/{answerId} endpoint. 
+     * @param answerId
+     * @param accessToken
+     * @return uuid of the deleted answer
+     * @throws AuthorizationFailedException
+     * @throws AnswerNotFoundException
+     */
 
     @Transactional(propagation = Propagation.REQUIRED)
     public AnswerEntity deleteAnswer(final String answerId,final String accessToken) throws AuthorizationFailedException, AnswerNotFoundException {
@@ -106,6 +133,16 @@ public class AnswerBusinessService {
 
     }
 
+    /**
+     * The method implements the business logic for answer/all/{questionId} endpoint. 
+     * @param questionId
+     * @param accessToken
+     * @return uuid of the answer, "content" of the question and "content"
+     *         of all the answers posted for that particular question 
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+
     @Transactional(propagation = Propagation.REQUIRED)
     public List<AnswerEntity> getAllAnswersByQuestionId(final String questionId, final String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
 
@@ -125,11 +162,5 @@ public class AnswerBusinessService {
         List<AnswerEntity> allAnswersToQuestion = answerDao.getAllAnswersByQuestionId(question.getUuid());
         return allAnswersToQuestion;
     }
-
-
-
-
-
-
 
 }

@@ -11,8 +11,10 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 /**
- * AnswerEntity class contains all the attributes to be mapped to all the fields in USERS table in the database.
- * All the annotations which are used to specify all the constraints to the columns in the database must be correctly implemented.
+ * AnswerEntity class contains all the attributes to be mapped to all the
+ * fields in ANSWER table in the database.
+ * All the annotations which are used to specify all the constraints
+ * to the columns in the database must be correctly implemented.
  */
 
 @Entity
@@ -22,7 +24,7 @@ import java.time.ZonedDateTime;
                 @NamedQuery(name = "getAllAnswer", query = "select u from AnswerEntity u "),
                 @NamedQuery(name = "answerByUUID", query = "select u from AnswerEntity u where u.uuid =:UUID"),
                 @NamedQuery(name = "getAllAnswerByUser", query = "select u from AnswerEntity u where u.user.id =:UserID"),
-                @NamedQuery(name = "getAllAnswerByQuestion", query = "select u from AnswerEntity u where u.question.uuid =:QUESTIONID")
+                @NamedQuery(name = "getAllAnswerByQuestion", query = "select u from AnswerEntity u where u.question.uuid =:QuestionId")
 
         }
 )

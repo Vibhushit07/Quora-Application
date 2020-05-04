@@ -17,6 +17,15 @@ public class CommonBusinessService {
     @Autowired
     private UserDao userDao;
 
+    /**
+     * The method implements the business logic for /userprofile/{userId}  endpoint.
+     * @param userUuid
+     * @param authorizationToken
+     * @return All the details of the user
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
+
     public UserEntity getUser(final String userUuid, final String authorizationToken) throws AuthorizationFailedException, UserNotFoundException {
         UserAuthenticationTokenEntity userAuthenticationTokenEntity = userDao.getUserAuthToken(authorizationToken);
         if(userAuthenticationTokenEntity != null){
