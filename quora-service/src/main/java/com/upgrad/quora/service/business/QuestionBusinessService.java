@@ -4,11 +4,13 @@ import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthenticationTokenEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 
@@ -76,5 +78,29 @@ public class QuestionBusinessService {
         throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
     }
 
+    public QuestionEntity deleteQuestion(final String questionid, final String authorizationToken) throws AuthorizationFailedException, InvalidQuestionException {
+        UserAuthenticationTokenEntity userAuthTokenEntity = questionDao.getUserAuthToken(authorizationToken);
+        if(userAuthTokenEntity != null){
+            ZonedDateTime logout = userAuthTokenEntity.getLogoutAt();
+            if (logout != null) {
+                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete a question");
+            }
 
+            UserEntity userEntity = questionDao.getUserByUuid(userAuthTokenEntity.getUuid());
+            QuestionEntity Entity = questionDao.getQuestionByUuid(questionid);
+            if (Entity == null){
+                throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
+            }
+
+            if (Entity.getUserEntity() == userAuthTokenEntity.getUserEntity() || userEntity.getRole().equals("admin")){
+                return questionDao.DeleteQuestion(Entity);
+            }
+            else
+            {
+                throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
+            }
+        }
+
+        throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+    }
 }
