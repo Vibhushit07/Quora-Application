@@ -64,10 +64,8 @@ public class UserBusinessService {
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(password);
             UserAuthenticationTokenEntity userAuthenticationTokenEntity = new UserAuthenticationTokenEntity();
             userAuthenticationTokenEntity.setUserEntity(userEntity);
-
             final ZonedDateTime loginAt = ZonedDateTime.now();
             final ZonedDateTime expiresAt = loginAt.plusHours(10);
-
             userAuthenticationTokenEntity.setAccessToken(jwtTokenProvider.generateToken(userEntity.getUuid(), loginAt, expiresAt));
             userAuthenticationTokenEntity.setLoginAt(loginAt);
             userAuthenticationTokenEntity.setExpiresAt(expiresAt);
@@ -82,14 +80,20 @@ public class UserBusinessService {
             throw new AuthenticationFailedException("ATH-002", "Incorrect Password");
         }
     }
-        @Transactional(propagation = Propagation.REQUIRED)
-        public UserAuthenticationTokenEntity signout(final String authorizationToken) throws SignOutRestrictedException {
 
-            UserAuthenticationTokenEntity userAuthenticationTokenEntity = userDao.getUserAuthToken(authorizationToken);
+    /**
+     * The method implements the business logic for /user/signout endpoint.
+     * @param authorizationToken
+     * @return uuid of signed out user
+     */
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public UserAuthenticationTokenEntity signout(final String authorizationToken) throws SignOutRestrictedException {
+
+        UserAuthenticationTokenEntity userAuthenticationTokenEntity = userDao.getUserAuthToken(authorizationToken);
 
             if(userAuthenticationTokenEntity == null)
                 throw new SignOutRestrictedException("SGR-001", "User not signed in");
-
 
             return userDao.signOut(userAuthenticationTokenEntity);
         }
