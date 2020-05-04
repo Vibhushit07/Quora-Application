@@ -1,9 +1,6 @@
 package com.upgrad.quora.api.controller;
 
-import com.upgrad.quora.api.model.AnswerEditRequest;
-import com.upgrad.quora.api.model.AnswerEditResponse;
-import com.upgrad.quora.api.model.AnswerRequest;
-import com.upgrad.quora.api.model.AnswerResponse;
+import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.AnswerBusinessService;
 import com.upgrad.quora.service.entity.AnswerEntity;
 import com.upgrad.quora.service.entity.QuestionEntity;
@@ -17,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/")
@@ -58,5 +57,34 @@ public class AnswerController {
         AnswerEditResponse answerEditResponse = new AnswerEditResponse().id(answerId).status("ANSWER EDITED");
 
         return new ResponseEntity<>(answerEditResponse, HttpStatus.OK);
-        }
     }
+
+    @RequestMapping(method = RequestMethod.DELETE,path = "/answer/delete/{answerId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerDeleteResponse> deleteAnswer(@PathVariable("answerId") final String answerId, @RequestHeader("authorization") final String accessToken) throws AuthorizationFailedException, AnswerNotFoundException {
+
+        answerBusinessService.deleteAnswer(answerId, accessToken);
+        AnswerDeleteResponse answerDeleteResponse = new AnswerDeleteResponse().id(answerId).status("ANSWER DELETED");
+
+        return new ResponseEntity<>(answerDeleteResponse,HttpStatus.OK);
+    }
+
+    @GetMapping("answer/all/{questionId}")
+    public ResponseEntity<List<AnswerDetailsResponse>> getAllAnswersToQuestion(@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
+
+        List<AnswerEntity> answerEntities =  answerBusinessService.getAllAnswersByQuestionId(questionId, accessToken);
+
+        List<AnswerDetailsResponse> answerDetailsResponseList = answerEntities.stream()
+                .map(answer -> {
+                    AnswerDetailsResponse answerDetailsResponse = new AnswerDetailsResponse();
+                    answerDetailsResponse.setId(answer.getUuid());
+                    answerDetailsResponse.setAnswerContent(answer.getContent());
+                    answerDetailsResponse.setQuestionContent(answer.getQuestion().getContent());
+                    return answerDetailsResponse;
+                }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(answerDetailsResponseList, HttpStatus.OK);
+    }
+
+}
+
+
