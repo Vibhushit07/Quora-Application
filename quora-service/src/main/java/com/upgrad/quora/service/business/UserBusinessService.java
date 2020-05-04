@@ -4,6 +4,7 @@ import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthenticationTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,12 @@ public class UserBusinessService {
 
     @Autowired
     private PasswordCryptographyProvider passwordCryptographyProvider;
+
+    /**
+     * The method implements the business logic for /user/signup endpoint.
+     * @param  userEntity
+     *  @return uuid of registered user
+     */
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity signup(final UserEntity userEntity) throws SignUpRestrictedException {
@@ -75,4 +82,15 @@ public class UserBusinessService {
             throw new AuthenticationFailedException("ATH-002", "Incorrect Password");
         }
     }
-}
+        @Transactional(propagation = Propagation.REQUIRED)
+        public UserAuthenticationTokenEntity signout(final String authorizationToken) throws SignOutRestrictedException {
+
+            UserAuthenticationTokenEntity userAuthenticationTokenEntity = userDao.getUserAuthToken(authorizationToken);
+
+            if(userAuthenticationTokenEntity == null)
+                throw new SignOutRestrictedException("SGR-001", "User not signed in");
+
+
+            return userDao.signOut(userAuthenticationTokenEntity);
+        }
+    }
