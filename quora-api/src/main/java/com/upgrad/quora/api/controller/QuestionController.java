@@ -54,6 +54,6 @@ public class QuestionController {
                 }).collect(Collectors.toList());
 
         return new ResponseEntity<>(questionDetailsResponseList, HttpStatus.OK);
-        
+
     }
 }
