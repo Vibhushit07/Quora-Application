@@ -3,6 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.AnswerDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.AnswerEntity;
+import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthenticationTokenEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
@@ -31,5 +32,14 @@ public class AnswerBusinessService {
 
         answerEntity.setUser(userAuthenticationTokenEntity.getUserEntity());
         return answerDao.createAnswer(answerEntity);
+    }
+
+    public QuestionEntity getQuestionByUuid(final String uuid)throws InvalidQuestionException{
+        QuestionEntity questionEntity =  answerDao.getQuestionById(uuid);
+
+        if(questionEntity == null)
+            throw new InvalidQuestionException("QUES-001","The question entered is invalid");
+
+        return questionEntity;
     }
 }
