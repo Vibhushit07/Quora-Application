@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 
 @Repository
@@ -29,6 +30,14 @@ public class QuestionDao {
                     .setParameter("accessToken", accessToken).getSingleResult();
         } catch (NoResultException nre) {
 
+            return null;
+        }
+    }
+
+    public List<QuestionEntity> getAllQuestions(){
+        try{
+            return entityManager.createNamedQuery("getAllQuestions", QuestionEntity.class).getResultList();
+        }catch (NoResultException nre){
             return null;
         }
     }
