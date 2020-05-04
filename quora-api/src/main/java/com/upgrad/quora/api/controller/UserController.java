@@ -28,7 +28,7 @@ public class UserController {
      * @param signupUserRequest - This argument contains all the attributes required to store user details in the database.
      * @return - ResponseEntity<SignupUserResponse> type object along with Http status CREATED.
      * @throws SignUpRestrictedException
-     */ 
+     */
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignupUserResponse> signup(final SignupUserRequest signupUserRequest, final SignupUserResponse signupUserResponse) throws SignUpRestrictedException {

@@ -1,11 +1,14 @@
 package com.upgrad.quora.service.dao;
 
+import com.upgrad.quora.service.entity.UserAuthenticationTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.time.ZonedDateTime;
 
 /**
  * UserDao class provides the database access for all the endpoints in user controller.
@@ -24,6 +27,19 @@ public class UserDao {
     public UserEntity createUser(UserEntity userEntity){
         entityManager.persist(userEntity);
         return userEntity;
+    }
+
+
+
+    @Transactional
+    public UserAuthenticationTokenEntity signOut(UserAuthenticationTokenEntity userAuthenticationTokenEntity){
+        userAuthenticationTokenEntity.setLogoutAt(ZonedDateTime.now());
+        return userAuthenticationTokenEntity;
+    }
+
+    public UserAuthenticationTokenEntity createAuthToken(final UserAuthenticationTokenEntity userAuthenticationTokenEntity){
+        entityManager.persist(userAuthenticationTokenEntity);
+        return userAuthenticationTokenEntity;
     }
 
     public UserEntity getUserByPassword(final String password){
@@ -64,5 +80,18 @@ public class UserDao {
         }catch (NoResultException nrex){
             return null;
         }
+    }
+
+    public UserAuthenticationTokenEntity getUserAuthToken(final String accessToken){
+        try{
+            return entityManager.createNamedQuery("userAuthToken", UserAuthenticationTokenEntity.class)
+                    .setParameter("accessToken", accessToken).getSingleResult();
+        }catch (NoResultException nrex){
+            return null;
+        }
+    }
+
+    public UserAuthenticationTokenEntity updateUserAuthToken(UserAuthenticationTokenEntity userAuthenticationTokenEntity){
+        return entityManager.merge(userAuthenticationTokenEntity);
     }
 }
