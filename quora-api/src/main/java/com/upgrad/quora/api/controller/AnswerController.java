@@ -1,9 +1,6 @@
 package com.upgrad.quora.api.controller;
 
-import com.upgrad.quora.api.model.AnswerEditRequest;
-import com.upgrad.quora.api.model.AnswerEditResponse;
-import com.upgrad.quora.api.model.AnswerRequest;
-import com.upgrad.quora.api.model.AnswerResponse;
+import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.AnswerBusinessService;
 import com.upgrad.quora.service.entity.AnswerEntity;
 import com.upgrad.quora.service.entity.QuestionEntity;
@@ -17,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/")
@@ -26,12 +25,14 @@ public class AnswerController {
     private AnswerBusinessService answerBusinessService;
 
     /**
-     * Controller method for /question/{questionId}/answer/create endpoint
-     *
+     * Controller method for /question/{questionId}/answer/create endpoint 
      * @param answerRequest
+     * @param questionId
      * @param authorization
-     * @return uuid of answer
+     * @return uuid of the answer and message "ANSWER CREATED"
+     *          in the JSON response with the corresponding HTTP status 
      * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
      */
 
     @RequestMapping(method = RequestMethod.POST, path = "/question/{questionId}/answer/create", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -51,6 +52,17 @@ public class AnswerController {
         return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
     }
 
+    /**
+     * Controller method for /answer/edit/{answerId} endpoint
+     * @param answerEditRequest
+     * @param answerId
+     * @param accessToken
+     * @return uuid of the edited answer and message "ANSWER EDITED"
+     *          in the JSON response with the corresponding HTTP status 
+     * @throws AuthorizationFailedException
+     * @throws AnswerNotFoundException
+     */
+
     @RequestMapping(method = RequestMethod.PUT, path = "/answer/edit/{answerId}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<AnswerEditResponse> editAnswerContent(final AnswerEditRequest answerEditRequest, @PathVariable("answerId") final String answerId, @RequestHeader("authorization") final String accessToken) throws AuthorizationFailedException, AnswerNotFoundException {
 
@@ -58,5 +70,55 @@ public class AnswerController {
         AnswerEditResponse answerEditResponse = new AnswerEditResponse().id(answerId).status("ANSWER EDITED");
 
         return new ResponseEntity<>(answerEditResponse, HttpStatus.OK);
-        }
     }
+
+    /**
+     * Controller method for /answer/delete/{answerId} endpoint
+     * @param answerId
+     * @param accessToken
+     * @return uuid of the deleted answer and message "ANSWER DELETED"
+     *         in the JSON response with the corresponding HTTP status 
+     * @throws AuthorizationFailedException
+     * @throws AnswerNotFoundException
+     */
+
+    @RequestMapping(method = RequestMethod.DELETE,path = "/answer/delete/{answerId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerDeleteResponse> deleteAnswer(@PathVariable("answerId") final String answerId, @RequestHeader("authorization") final String accessToken) throws AuthorizationFailedException, AnswerNotFoundException {
+
+        answerBusinessService.deleteAnswer(answerId, accessToken);
+        AnswerDeleteResponse answerDeleteResponse = new AnswerDeleteResponse().id(answerId).status("ANSWER DELETED");
+
+        return new ResponseEntity<>(answerDeleteResponse,HttpStatus.OK);
+    }
+
+    /**
+     * Controller method for /answer/all/{questionId} endpoint
+     * @param questionId
+     * @param accessToken
+     * @return uuid of the answer, "content" of the question and "content"of all the answers
+     *         posted for that particular question from the database in the
+     *         JSON response with the corresponding HTTP status 
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+
+    @GetMapping("answer/all/{questionId}")
+    public ResponseEntity<List<AnswerDetailsResponse>> getAllAnswersToQuestion(@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String accessToken) throws AuthorizationFailedException, InvalidQuestionException {
+
+        List<AnswerEntity> answerEntities =  answerBusinessService.getAllAnswersByQuestionId(questionId, accessToken);
+
+        List<AnswerDetailsResponse> answerDetailsResponseList = answerEntities.stream()
+                .map(answer -> {
+                    AnswerDetailsResponse answerDetailsResponse = new AnswerDetailsResponse();
+                    answerDetailsResponse.setId(answer.getUuid());
+                    answerDetailsResponse.setAnswerContent(answer.getContent());
+                    answerDetailsResponse.setQuestionContent(answer.getQuestion().getContent());
+                    return answerDetailsResponse;
+                }).collect(Collectors.toList());
+
+        return new ResponseEntity<>(answerDetailsResponseList, HttpStatus.OK);
+    }
+
+}
+
+

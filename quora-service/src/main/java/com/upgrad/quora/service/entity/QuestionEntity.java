@@ -10,7 +10,10 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-
+/**
+ * Question Entity class contains all the attributes to be mapped to all the fields in QUESTION table in the database.
+ * All the annotations which are used to specify all the constraints to the columns in the database must be correctly implemented.
+ */
 @Entity
 @Table(name = "question")
 @NamedQueries(
