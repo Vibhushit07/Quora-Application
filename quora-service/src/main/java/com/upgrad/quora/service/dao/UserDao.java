@@ -29,7 +29,9 @@ public class UserDao {
         return userEntity;
     }
 
-
+    /**This method provides the database access to
+     /user/signout endpoint
+     */
 
     @Transactional
     public UserAuthenticationTokenEntity signOut(UserAuthenticationTokenEntity userAuthenticationTokenEntity){
