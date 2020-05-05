@@ -22,7 +22,7 @@ public class AdminController {
      *A controller method for endpoint /admin/user/{userId}
      * @param userId
      * @param authorization
-     * @return uuid' of the deleted user
+     * @return uuid of the deleted user
      * @throws AuthorizationFailedException
      * @throws UserNotFoundException
      */
