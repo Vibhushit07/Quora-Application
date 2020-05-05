@@ -8,6 +8,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Repository
+
+/**
+ * AdminDao class provides the database access
+ * for all the endpoints in Admin controller.
+ */
+
 public class AdminDao {
     @PersistenceContext
     private EntityManager entityManager;
